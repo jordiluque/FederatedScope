@@ -1,5 +1,5 @@
 from federatedscope.llm.model.adapter_builder import AdapterModel
-
+import torch
 
 def get_model_from_huggingface(model_name, config):
     """
@@ -14,13 +14,16 @@ def get_model_from_huggingface(model_name, config):
         AutoModelForCausalLM: A causal language model object.
     """
     from transformers import AutoModelForCausalLM
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
 
     kwargs = {}
     if len(config.llm.cache.model):
         kwargs['cache_dir'] = config.llm.cache.model
 
-    return AutoModelForCausalLM.from_pretrained(model_name, **kwargs)
 
+    return AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, attn_implementation="flash_attention_2", torch_dtype=torch.float16, low_cpu_mem_usage=True, use_safetensors=True, **kwargs)
+    #return AutoModelForCausalLM.from_pretrained(model_name,trust_remote_code=True, **kwargs)
 
 def get_model_from_modelscope(model_name, config):
     """
@@ -35,13 +38,16 @@ def get_model_from_modelscope(model_name, config):
         Model: A causal language model object.
     """
     from modelscope import AutoModelForCausalLM
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
 
     kwargs = {}
     if len(config.llm.cache.model):
         kwargs['cache_dir'] = config.llm.cache.model
 
-    return AutoModelForCausalLM.from_pretrained(model_name, **kwargs)
 
+    return AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, attn_implementation="flash_attention_2", torch_dtype=torch.float16, low_cpu_mem_usage=True, use_safetensors=True, **kwargs)
+    #return AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, **kwargs)
 
 def get_llm(config):
     """
