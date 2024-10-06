@@ -1,0 +1,53 @@
+use_gpu: True
+device: 0
+expname_tag: "ds_1c_200r_30ls_dist"
+early_stop:
+  patience: 0
+federate:
+  mode: "distributed"
+  client_num: 1
+  total_round_num: 200
+  save_to: "models/distributed/Phi-3-mini-128k-instruct/ds_1c_200r_30ls.ckpt"
+  make_global_eval: False
+data:
+  root: data/
+  type: 'alpaca@llm'
+  splits: [0.98,0.01,0.01]
+  splitter: 'iid'
+distribute:
+  use: True
+  server_host: '192.168.24.120'
+  server_port: 11004
+  client_host: '192.168.24.115'
+  client_port: 50052
+  role: 'client'
+  data_idx: 1
+  grpc_max_send_message_length: 1048576000
+  grpc_max_receive_message_length: 1048576000
+llm:
+  tok_len: 1000
+  chat:
+    max_len: 2000
+  adapter:
+    use: True
+    args: [ { 'adapter_package': 'peft', 'adapter_method': 'lora', 'r': 8, 'lora_alpha': 16, 'lora_dropout': 0.05, 'target_modules': [ "q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "lm_head" ] } ]
+  deepspeed:
+    use: True
+    ds_config: 'federatedscope/llm/baseline/deepspeed/ds_config_4bs.json'
+dataloader:
+  batch_size: 1
+model:
+  type: 'microsoft/Phi-3-mini-128k-instruct@huggingface_llm'
+train:
+  local_update_steps: 30
+  batch_or_epoch: batch
+  optimizer:
+    lr: 0.0003
+    weight_decay: 0.0
+criterion:
+  type: CrossEntropyLoss
+trainer:
+  type: llmtrainer
+eval:
+  freq: 50
+  metrics: ['loss']

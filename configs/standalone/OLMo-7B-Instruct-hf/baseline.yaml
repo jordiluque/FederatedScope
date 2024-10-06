@@ -1,0 +1,48 @@
+use_gpu: True
+device: 0
+expname_tag: "baseline"
+early_stop:
+  patience: 0
+federate:
+  mode: "standalone"
+  master_port: 29340
+  client_num: 1
+  total_round_num: 200
+  share_local_model: True
+  online_aggr: False
+  process_num: 1
+  #save_to: ""
+data:
+  root: data/
+  type: 'alpaca@llm'
+  splits: [0.98,0.01,0.01]
+  splitter: 'iid'
+llm:
+  tok_len: 1000
+  chat:
+    max_len: 2000
+  adapter:
+    use: False
+    args: [ { 'adapter_package': 'peft', 'adapter_method': 'lora', 'r': 8, 'lora_alpha': 16, 'lora_dropout': 0.05, 'target_modules': [ "q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "lm_head" ] } ]
+  deepspeed:
+    use: True
+    ds_config: 'federatedscope/llm/baseline/deepspeed/ds_config_4bs.json'
+dataloader:
+  batch_size: 1
+model:
+  type: 'allenai/OLMo-7B-Instruct-hf@huggingface_llm'
+train:
+  local_update_steps: 30
+  batch_or_epoch: batch
+  optimizer:
+    lr: 0.0003
+    weight_decay: 0.0
+  is_enable_half: True
+criterion:
+  type: CrossEntropyLoss
+trainer:
+  type: llmtrainer
+eval:
+  freq: 50
+  metrics: ['loss']
+  count_flops: False
