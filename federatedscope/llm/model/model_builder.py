@@ -21,7 +21,7 @@ def get_model_from_huggingface(model_name, config):
     if len(config.llm.cache.model):
         kwargs['cache_dir'] = config.llm.cache.model
 
-    return AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, torch_dtype=torch.bfloat16, **kwargs )
+    return AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, torch_dtype=torch.bfloat16, **kwargs)
 
 
 
