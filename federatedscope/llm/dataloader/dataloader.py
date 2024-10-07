@@ -91,7 +91,7 @@ def get_tokenizer(model_name, cache_dir, tok_len=128, pkg='huggingface_llm'):
         cache_dir=cache_dir,
         model_max_length=tok_len,
         padding_side="right",
-        use_fast=False,
+        use_fast=True,
     )
 
     special_tokens = dict()
