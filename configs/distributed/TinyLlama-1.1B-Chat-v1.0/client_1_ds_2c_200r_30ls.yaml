@@ -1,13 +1,13 @@
 use_gpu: True
 device: 0
-expname_tag: "ds_1c_200r_30ls_dist"
+expname_tag: "ds_2c_200r_30ls_dist"
 early_stop:
   patience: 0
 federate:
   mode: "distributed"
-  client_num: 1
+  client_num: 2
   total_round_num: 200
-  save_to: "models/distributed/Phi-3-mini-128k-instruct/server_ds_1c_200r_30ls.ckpt"
+  save_to: "models/distributed/TinyLlama-1.1B-Chat-v1.0/ds_2c_200r_30ls.ckpt"
   make_global_eval: False
 data:
   root: data/
@@ -17,8 +17,10 @@ data:
 distribute:
   use: True
   server_host: '192.168.24.120'
-  server_port: 11004
-  role: 'server'
+  server_port: 11000
+  client_host: '192.168.24.117'
+  client_port: 50052
+  role: 'client'
   data_idx: 1
   grpc_max_send_message_length: 1048576000
   grpc_max_receive_message_length: 1048576000
@@ -35,14 +37,13 @@ llm:
 dataloader:
   batch_size: 1
 model:
-  type: 'microsoft/Phi-3-mini-128k-instruct@huggingface_llm'
+  type: 'TinyLlama/TinyLlama-1.1B-Chat-v1.0@huggingface_llm'
 train:
   local_update_steps: 30
   batch_or_epoch: batch
   optimizer:
     lr: 0.0003
     weight_decay: 0.0
-  is_enable_half: True
 criterion:
   type: CrossEntropyLoss
 trainer:

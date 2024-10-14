@@ -7,7 +7,7 @@ federate:
   mode: "distributed"
   client_num: 1
   total_round_num: 200
-  save_to: "models/distributed/phi-1_5/ds_1c_200r_30ls.ckpt"
+  save_to: "models/distributed/phi-1_5/server_ds_1c_200r_30ls.ckpt"
   make_global_eval: False
 data:
   root: data/

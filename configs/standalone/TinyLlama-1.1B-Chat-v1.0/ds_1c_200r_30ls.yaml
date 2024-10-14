@@ -1,27 +1,22 @@
 use_gpu: True
-device: 0
-expname_tag: "ds_1c_200r_30ls_dist"
+device: 1
+expname_tag: "ds_1c_200r_30ls"
 early_stop:
   patience: 0
 federate:
-  mode: "distributed"
+  mode: "standalone"
+  master_port: 29340
   client_num: 1
   total_round_num: 200
-  save_to: "models/distributed/Phi-3-mini-128k-instruct/server_ds_1c_200r_30ls.ckpt"
-  make_global_eval: False
+  share_local_model: True
+  online_aggr: False
+  process_num: 1
+  save_to: "models/standalone/TinyLlama-1.1B-Chat-v1.0/ds_1c_200r_30ls.ckpt"
 data:
   root: data/
   type: 'alpaca@llm'
   splits: [0.98,0.01,0.01]
   splitter: 'iid'
-distribute:
-  use: True
-  server_host: '192.168.24.120'
-  server_port: 11004
-  role: 'server'
-  data_idx: 1
-  grpc_max_send_message_length: 1048576000
-  grpc_max_receive_message_length: 1048576000
 llm:
   tok_len: 1000
   chat:
@@ -35,7 +30,7 @@ llm:
 dataloader:
   batch_size: 1
 model:
-  type: 'microsoft/Phi-3-mini-128k-instruct@huggingface_llm'
+  type: 'TinyLlama/TinyLlama-1.1B-Chat-v1.0@huggingface_llm'
 train:
   local_update_steps: 30
   batch_or_epoch: batch
@@ -50,3 +45,4 @@ trainer:
 eval:
   freq: 50
   metrics: ['loss']
+  count_flops: False

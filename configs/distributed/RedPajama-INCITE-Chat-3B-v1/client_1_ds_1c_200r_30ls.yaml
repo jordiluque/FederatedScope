@@ -7,7 +7,7 @@ federate:
   mode: "distributed"
   client_num: 1
   total_round_num: 200
-  save_to: "models/distributed/Phi-3-mini-128k-instruct/server_ds_1c_200r_30ls.ckpt"
+  save_to: "models/distributed/RedPajama-INCITE-Chat-3B-v1/ds_1c_200r_30ls.ckpt"
   make_global_eval: False
 data:
   root: data/
@@ -17,8 +17,10 @@ data:
 distribute:
   use: True
   server_host: '192.168.24.120'
-  server_port: 11004
-  role: 'server'
+  server_port: 11000
+  client_host: '192.168.24.117'
+  client_port: 50052
+  role: 'client'
   data_idx: 1
   grpc_max_send_message_length: 1048576000
   grpc_max_receive_message_length: 1048576000
@@ -28,14 +30,14 @@ llm:
     max_len: 2000
   adapter:
     use: True
-    args: [ { 'adapter_package': 'peft', 'adapter_method': 'lora', 'r': 8, 'lora_alpha': 16, 'lora_dropout': 0.05, 'target_modules': [ "q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "lm_head" ] } ]
+    args: [ { 'adapter_package': 'peft', 'adapter_method': 'lora', 'r': 8, 'lora_alpha': 16, 'lora_dropout': 0.05, 'target_modules': [ "q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "lm_head", "query_key_value", "dense", "dense_h_to_4h", "dense_4h_to_h" ] } ]
   deepspeed:
     use: True
     ds_config: 'federatedscope/llm/baseline/deepspeed/ds_config_4bs.json'
 dataloader:
   batch_size: 1
 model:
-  type: 'microsoft/Phi-3-mini-128k-instruct@huggingface_llm'
+  type: 'togethercomputer/RedPajama-INCITE-Chat-3B-v1@huggingface_llm'
 train:
   local_update_steps: 30
   batch_or_epoch: batch
