@@ -1,4 +1,4 @@
-How to install FederatedScope and make it run?
+# How to install FederatedScope and make it run?
 
 ## Installation and setup
 
@@ -18,7 +18,6 @@ git clone --branch llm-eloquence https://github.com/jordiluque/FederatedScope.gi
 
 ### 3. Configure CUDA Environment Variables
 To ensure that the correct CUDA paths are set, add the following lines to your .bashrc (or equivalent shell configuration file). The CUDA version should be around version 12 (e.g., 12.4, 12.5, or 12.6). If you don’t already have the [CUTLASS](https://github.com/NVIDIA/cutlass) repository installed, clone and set it up on your machine.
-
 ```bash
 export PATH=/usr/local/cuda-12/bin/:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-12/lib64:/usr/local/cuda-12/lib:$LD_LIBRARY_PATH
@@ -44,7 +43,6 @@ pip install -e .[llm]
 
 ### 6. Verify Installation
 Check if the default script runs correctly:
-
 ```bash
 python federatedscope/main.py --cfg federatedscope/llm/baseline/testcase.yaml
 ```
