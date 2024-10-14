@@ -1,6 +1,4 @@
-# How to install FederatedScope and make it run?  
-
-## Installation and setup  
+# Installation, Setup and Running of FederatedScope for LLMs Fine-tuning
 
 First, use a virtual environment manager such as pyenv to create a virtual environment. Make sure you are using Python 3.9.0:
 
