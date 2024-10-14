@@ -12,6 +12,7 @@ pyenv virtualenv 3.9.0 fs-llm_3.9.0
 pyenv activate fs-llm_3.9.0
 ```
 <br>
+
 ### 2. Clone the FederatedScope Repository  
 
 Clone the specific branch of the FederatedScope repository to your machine:
@@ -20,6 +21,7 @@ Clone the specific branch of the FederatedScope repository to your machine:
 git clone --branch llm-eloquence https://github.com/jordiluque/FederatedScope.git
 ```
 <br>
+
 ### 3. Configure CUDA Environment Variables  
 
 To ensure that the correct CUDA paths are set, add the following lines to your .bashrc (or equivalent shell configuration file). The CUDA version should be around version 12 (e.g., 12.4, 12.5, or 12.6). If you don’t already have the [CUTLASS](https://github.com/NVIDIA/cutlass) repository installed, clone and set it up on your machine.
