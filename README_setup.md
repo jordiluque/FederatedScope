@@ -9,6 +9,7 @@ pyenv install 3.9.0
 pyenv virtualenv 3.9.0 fs-llm_3.9.0
 pyenv activate fs-llm_3.9.0
 ```
+
 ### 2. Clone the FederatedScope Repository
 Clone the specific branch of the FederatedScope repository to your machine:
 ```bash
@@ -23,7 +24,7 @@ export PATH=/usr/local/cuda-12/bin/:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-12/lib64:/usr/local/cuda-12/lib:$LD_LIBRARY_PATH
 export CUDA_HOME=/usr/local/cuda-12
 export CUTLASS_PATH=/home/user/repos/cutlass 
-````
+```
 After editing .bashrc, don't forget to run:
 ```bash
 source ~/.bashrc
