@@ -70,3 +70,18 @@ Check if fine-tuning an LLM in standalone mode works correctly with DeepSpeed. R
 ```bash
 deepspeed federatedscope/main.py --cfg configs/standalone/Phi-3.5-mini-instruct/ds_3c_200r_30ls.yaml
 ```
+
+To execute federated fine-tuning in distributed mode, separate commands need to be run for the server and each client. In the FederatedScope framework, each client must run on a different machine. The following config files will allow us to test if the setup works with two clients in distributed mode. However, before running the commands, ensure that the `server_host`, `server_port`, `client_host`, and `client_port` fields in the config files are updated with the correct IP addresses and ports for your machines. Additionally, adjust CUDA_VISIBLE_DEVICES to reflect the number of GPUs available on each machine.
+
+To run the server use:
+```bash
+deepspeed --master_addr=127.0.0.1 --master_port=29500 federatedscope/main.py --cfg configs/distributed/Phi-3.5-mini-instruct/server_ds_2c_200r_30ls.yaml
+```
+```bash
+To run a first client in one machine use:
+CUDA_VISIBLE_DEVICES=0,1,2 deepspeed --master_addr=127.0.0.1 --master_port=29500 federatedscope/main.py --cfg configs/distributed/Phi-3.5-mini-instruct/client_1_ds_2c_200r_30ls.yaml
+```
+```bash
+To run a second client in another machine:
+CUDA_VISIBLE_DEVICES=0,1,2 deepspeed --master_addr=127.0.0.1 --master_port=29500 federatedscope/main.py --cfg configs/distributed/Phi-3.5-mini-instruct/client_1_ds_2c_200r_30ls.yaml 
+```
