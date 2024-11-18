@@ -97,6 +97,9 @@ def load_dataset(config, client_cfgs=None):
     elif '@llm' in config.data.type.lower():
         from federatedscope.llm.dataloader import load_llm_dataset
         dataset, modified_config = load_llm_dataset(config)
+    elif '@asr' in config.data.type.lower():
+        from federatedscope.asr.dataloader import load_asr_dataset
+        dataset, modified_config = load_asr_dataset(config)
     elif '@' in config.data.type.lower():
         from federatedscope.core.data.utils import load_external_data
         dataset, modified_config = load_external_data(config)
