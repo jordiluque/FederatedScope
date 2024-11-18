@@ -58,7 +58,7 @@ def get_data(config, client_cfgs=None):
         SubReddit	                        NLP
         Twitter (Sentiment140)	            NLP
         ``${DNAME}@torchtext``	            NLP
-        ``${DNAME}@huggingface_datasets``  	NLP
+        ``${DNAME}@huggingface_datasets``  	NLP/ASR
         Cora	                            Graph (node-level)
         CiteSeer	                        Graph (node-level)
         PubMed	                            Graph (node-level)

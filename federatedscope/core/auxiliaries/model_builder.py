@@ -126,7 +126,8 @@ def get_model(config, local_data=None, backend='torch'):
 
     if model_config.type.lower() in \
             ['xgb_tree', 'gbdt_tree', 'random_forest'] or \
-            model_config.type.lower().endswith('_llm'):
+            model_config.type.lower().endswith('_llm') or \
+            model_config.type.lower().endswith('_asr'):
         input_shape = None
     elif local_data is not None:
         input_shape = get_shape_from_data(local_data, model_config, backend)
@@ -187,6 +188,9 @@ def get_model(config, local_data=None, backend='torch'):
     elif model_config.type.lower().endswith('_llm'):
         from federatedscope.llm.model import get_llm
         model = get_llm(config)
+    elif model_config.type.lower().endswith('_asr'):
+        from federatedscope.asr.model import get_asr
+        model = get_asr(config)
     elif model_config.type.lower() in [
             'gcn', 'sage', 'gpr', 'gat', 'gin', 'mpnn'
     ]:
