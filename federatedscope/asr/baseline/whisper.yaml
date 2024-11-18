@@ -1,0 +1,47 @@
+use_gpu: True
+device: 0
+early_stop:
+  patience: 0
+federate:
+  mode: standalone
+  client_num: 2
+  total_round_num: 500
+  save_to: "whisper_FL.ckpt"
+  share_local_model: True
+  online_aggr: True
+  process_num: 1
+data:
+  root: data/
+  type: 'common_voice_13_0@asr'
+  language: 'Maltese'
+  language_abbr: 'mt'
+  task: 'transcribe'
+  splits: [0.80,0.1,0.1]
+  splitter: 'iid'
+asr:
+  adapter:
+    use: False
+    args: [ { 'adapter_package': 'peft', 'adapter_method': 'lora', 'r': 8, 'lora_alpha': 16, 'lora_dropout': 0.05 } ]
+dataloader:
+  batch_size: 1
+model:
+  type: 'openai/whisper-large-v2@huggingface_asr'
+train:
+  local_update_steps: 30
+  batch_or_epoch: batch
+  optimizer:
+    lr: 0.0003
+    weight_decay: 0.0
+  is_enable_half: True
+criterion:
+  type: CrossEntropyLoss
+trainer:
+  type: asrtrainer
+eval:
+  freq: 50
+  metrics: ['loss']
+  count_flops: False
+wandb:
+  use: False 
+  name_user: "luquesky"
+  name_project: "FL-LLM"
