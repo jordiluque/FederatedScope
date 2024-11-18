@@ -14,6 +14,9 @@ def extend_data_cfg(cfg):
 
     cfg.data.root = 'data'
     cfg.data.type = 'toy'
+    cfg.data.language = 'english'
+    cfg.data.language_abbr = 'en'
+    cfg.data.task = 'transcribe'
     cfg.data.save_data = False  # whether to save the generated toy data
     cfg.data.args = []  # args for external dataset, eg. [{'download': True}]
     cfg.data.splitter = ''
