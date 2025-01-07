@@ -8,29 +8,29 @@ URL = 'https://github.com/alibaba/FederatedScope'
 
 minimal_requires = [
     'numpy<1.23.0',
-    'scikit-learn==1.0.2',
-    'scipy==1.7.3',
-    'pandas',
-    'grpcio>=1.45.0',
+    'scikit-learn==1.4.2',
+    'scipy==1.6.3',
+    'pandas==2.2.2',
+    'grpcio>=1.62.1',
     'grpcio-tools',
     'pyyaml>=5.1',
     'fvcore',
     'iopath',
-    'wandb',
-    'tensorboard',
+    'wandb==0.17.0',
+    'tensorboard==2.13.0',
     'tensorboardX',
     'pympler',
-    'protobuf==3.19.4',
-    'matplotlib',
+    'protobuf==3.20.2',
+    'matplotlib==3.8.4',
     'dill',
 ]
 
 test_requires = [
-    'pytest',
+    'pytest==7.3.2',
     'pytest-cov',
 ]
 
-dev_requires = test_requires + ['pre-commit', 'networkx', 'matplotlib']
+dev_requires = test_requires + ['pre-commit==3.7.1', 'networkx', 'matplotlib==3.8.4']
 
 org_requires = [
     'paramiko==2.11.0',
@@ -44,16 +44,16 @@ app_requires = [
     'transformers==4.16.2',
     'tokenizers==0.10.3',
     'datasets',
-    'sentencepiece',
+    'sentencepiece==0.1.99',
     'textgrid',
     'typeguard',
     'openml==0.12.2',
 ]
 
 llm_requires = [
-    'tokenizers==0.13.3',
-    'transformers==4.29.2',
-    'accelerate==0.20.3',
+    'tokenizers==0.19.1',
+    'transformers==4.40.2',
+    'accelerate==0.30.1',
     'peft==0.3.0',
     'sentencepiece==0.1.99',
 ]
