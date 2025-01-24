@@ -40,7 +40,7 @@ class FSChatBot(object):
         history: A list of lists of integers representing the tokenized input
             and output texts of previous turns.
     """
-    def __init__(self, config):
+    def __init__(self, config, print_model_arch=False):
         """
         Initializes the chatbot with the given configuration.
 
@@ -67,9 +67,16 @@ class FSChatBot(object):
                     self.model.load_state_dict(ckpt['model'])
                 else:
                     self.model.load_state_dict(ckpt)
+                if print_model_arch:
+                    print("Model architecture:\n") 
+                    print(self.model)
+                    print("\n")
             except Exception as error:
                 print(f"{error}, will use raw model.")
-
+                if print_model_arch:
+                    print("Model architecture:\n")    
+                    print(self.model)
+                    print("\n")
         if config.train.is_enable_half:
             self.model.half()
 
