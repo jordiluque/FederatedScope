@@ -57,6 +57,8 @@ def extend_fl_setting_cfg(cfg):
     cfg.federate.atc_vanilla = False
     cfg.federate.atc_load_from = ''
 
+    cfg.federate.len_server_dataset = 1000
+
     # ---------------------------------------------------------------------- #
     # Distribute training related options
     # ---------------------------------------------------------------------- #

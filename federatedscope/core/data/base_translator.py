@@ -55,16 +55,16 @@ class BaseDataTranslator:
             dict of ``ClientData`` with client_idx as key to build \
             ``StandaloneDataDict``
         """
-        train, val, test = self.split_train_val_test(dataset)
-        datadict = self.split_to_client(train, val, test)
+        s_val, s_test, train, val, test = self.split_train_val_test(dataset)
+        datadict = self.split_to_client(s_val, s_test, train, val, test)
         return datadict
 
     def split_train_val_test(self, dataset, cfg=None):
         """
-        Split dataset to train, val, test if not provided.
+        Split dataset to s_val, s_test, train, val and test if not provided.
 
         Returns:
-             List: List of split dataset, like ``[train, val, test]``
+             List: List of split dataset, like ``[s_val, s_test, train, val, test]``
         """
         from torch.utils.data import Dataset, Subset
 
@@ -80,23 +80,39 @@ class BaseDataTranslator:
             return [dataset[0], dataset[1], dataset[2]]
 
         index = np.random.permutation(np.arange(len(dataset)))
-        train_size = int(splits[0] * len(dataset))
-        val_size = int(splits[1] * len(dataset))
+        len_server_dataset = self.global_cfg.federate.len_server_dataset
+        len_clients_dataset = len(dataset)-2*len_server_dataset
+        train_size = int(splits[0] * len_clients_dataset)
+        val_size = int(splits[1] * len_clients_dataset)
 
         if isinstance(dataset, Dataset):
-            train_dataset = Subset(dataset, index[:train_size])
+            val_server_dataset = Subset(dataset, index[:len_server_dataset])
+            test_server_dataset = Subset(dataset, index[len_server_dataset : 2*len_server_dataset])
+            train_dataset = Subset(dataset, 
+                                   index[2*len_server_dataset : 2*len_server_dataset + train_size])
             val_dataset = Subset(dataset,
-                                 index[train_size:train_size + val_size])
-            test_dataset = Subset(dataset, index[train_size + val_size:])
+                                 index[2*len_server_dataset + train_size : 2*len_server_dataset + train_size + val_size])
+            test_dataset = Subset(dataset, 
+                                  index[2*len_server_dataset + train_size + val_size : 2*len_server_dataset + train_size + 2*val_size])        
         else:
-            train_dataset = [dataset[x] for x in index[:train_size]]
-            val_dataset = [
-                dataset[x] for x in index[train_size:train_size + val_size]
+            val_server_dataset = [
+                dataset[x] for x in index[:len_server_dataset]
             ]
-            test_dataset = [dataset[x] for x in index[train_size + val_size:]]
-        return train_dataset, val_dataset, test_dataset
+            test_server_dataset = [
+                dataset[x] for x in index[len_server_dataset : 2*len_server_dataset]
+            ]
+            train_dataset = [
+                dataset[x] for x in index[2*len_server_dataset : 2*len_server_dataset + train_size]
+            ]
+            val_dataset = [
+                dataset[x] for x in index[2*len_server_dataset + train_size : 2*len_server_dataset + train_size + val_size]
+            ]
+            test_dataset = [
+                dataset[x] for x in index[2*len_server_dataset + train_size + val_size : 2*len_server_dataset + train_size + 2*val_size]
+            ]
+        return val_server_dataset, test_server_dataset, train_dataset, val_dataset, test_dataset
 
-    def split_to_client(self, train, val, test):
+    def split_to_client(self, s_val, s_test, train, val, test):
         """
         Split dataset to clients and build ``ClientData``.
 
@@ -109,7 +125,7 @@ class BaseDataTranslator:
         split_train, split_val, split_test = [[None] * client_num] * 3
         train_label_distribution = None
 
-        # Split train/val/test to client
+        # Split train/val/test to n client
         if len(train) > 0:
             split_train = self.splitter(train)
             if self.global_cfg.data.consistent_label_distribution:
@@ -125,10 +141,9 @@ class BaseDataTranslator:
             split_val = self.splitter(val, prior=train_label_distribution)
         if len(test) > 0:
             split_test = self.splitter(test, prior=train_label_distribution)
-
-        # Build data dict with `ClientData`, key `0` for server.
+        
         data_dict = {
-            0: ClientData(self.global_cfg, train=train, val=val, test=test)
+            0: ClientData(self.global_cfg, train=None, val=s_val, test=s_test)
         }
         for client_id in range(1, client_num + 1):
             if self.client_cfgs is not None:
