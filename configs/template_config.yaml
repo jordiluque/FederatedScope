@@ -1,0 +1,67 @@
+criterion:
+  type: CrossEntropyLoss
+data:
+  root: "data/"
+  splits:
+  - 0.98
+  - 0.01
+  - 0.01
+  splitter: "iid"
+  type: "alpaca@llm"
+dataloader:
+  batch_size: 1
+device: 0
+early_stop:
+  patience: 0
+eval:
+  count_flops: False
+  freq: 5
+  metrics:
+  - loss
+expname_tag: "ds_3c_200r_30ls"
+federate:
+  method: "FedAvg"
+  client_num: 3
+  master_port: 29340
+  mode: "standalone"
+  online_aggr: False
+  process_num: 1
+  save_to: "models/standalone/Phi-3-mini-128k-instruct/ds_3c_200r_30ls"
+  share_local_model: True
+  total_round_num: 200
+llm:
+  adapter:
+    args:
+    - adapter_method: lora
+      adapter_package: peft
+      lora_alpha: 16
+      lora_dropout: 0.05
+      r: 8
+      target_modules:
+      - q_proj
+      - k_proj
+      - v_proj
+      - o_proj
+      - gate_proj
+      - up_proj
+      - down_proj
+      - lm_head
+    use: True
+  chat:
+    max_len: 2000
+  deepspeed:
+    ds_config: "federatedscope/llm/baseline/deepspeed/ds_config_4bs.json"
+    use: True
+  tok_len: 1000
+model:
+  type: "microsoft/Phi-3-mini-128k-instruct"
+train:
+  batch_or_epoch: batch
+  is_enable_half: True
+  local_update_steps: 30
+  optimizer:
+    lr: 0.0003
+    weight_decay: 0.0
+trainer:
+  type: llmtrainer
+use_gpu: True
