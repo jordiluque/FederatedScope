@@ -1,4 +1,4 @@
-use_gpu: True
+use_gpu: False
 device: 1
 expname_tag: "baseline"
 early_stop:
@@ -25,7 +25,7 @@ llm:
     use: False
     args: [ { 'adapter_package': 'peft', 'adapter_method': 'lora', 'r': 8, 'lora_alpha': 16, 'lora_dropout': 0.05, 'target_modules': [ "q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "lm_head" ] } ]
   deepspeed:
-    use: True
+    use: False
     ds_config: 'federatedscope/llm/baseline/deepspeed/ds_config_4bs.json'
 dataloader:
   batch_size: 1
