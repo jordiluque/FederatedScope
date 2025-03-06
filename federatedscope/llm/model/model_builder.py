@@ -22,7 +22,7 @@ def get_model_from_huggingface(model_name, config):
         kwargs['cache_dir'] = config.llm.cache.model
 
 
-    return AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, attn_implementation="flash_attention_2", torch_dtype=torch.float16, low_cpu_mem_usage=True, use_safetensors=True, **kwargs)
+    return AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, torch_dtype=torch.bfloat16, **kwargs)# use_safetensors=True, **kwargs)
     #return AutoModelForCausalLM.from_pretrained(model_name,trust_remote_code=True, **kwargs)
 
 def get_model_from_modelscope(model_name, config):
@@ -46,7 +46,8 @@ def get_model_from_modelscope(model_name, config):
         kwargs['cache_dir'] = config.llm.cache.model
 
 
-    return AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, attn_implementation="flash_attention_2", torch_dtype=torch.float16, low_cpu_mem_usage=True, use_safetensors=True, **kwargs)
+    return AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, torch_dtype=torch.bfloat16, **kwargs )#, use_safetensors=True, **kwargs)
+    #return AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, attn_implementation="flash_attention_2", torch_dtype=torch.bfloat16, use_safetensors=True, **kwargs)
     #return AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, **kwargs)
 
 def get_llm(config):
